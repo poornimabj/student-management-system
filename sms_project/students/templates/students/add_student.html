@@ -1,0 +1,220 @@
+{% extends 'students/base.html' %}
+{% block title %}Add Student{% endblock %}
+
+{% block content %}
+<style>
+    /* Styling for the overall form container and heading */
+    .form-container {
+        max-width: 600px;
+        margin: 30px auto;
+        padding: 30px;
+        background: white;
+        border-radius: 20px; /* Matches dashboard card radius */
+        box-shadow: 0 5px 18px rgba(0, 0, 0, 0.1); /* Matches dashboard card shadow */
+    }
+
+    .form-container h1 {
+        text-align: center;
+        color: #5d26c1; /* Primary purple color */
+        font-weight: 700;
+        margin-bottom: 30px;
+        font-size: 28px;
+    }
+
+    /* Style for the Django form paragraphs */
+    .form-container p {
+        margin-bottom: 20px;
+    }
+
+    /* Styling for all input fields (text, number, select) */
+    .form-container input[type="text"],
+    .form-container input[type="number"],
+    .form-container input[type="email"],
+    .form-container select,
+    .form-container textarea {
+        width: 100%;
+        padding: 12px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        box-sizing: border-box;
+        font-size: 16px;
+        transition: border-color 0.3s, box-shadow 0.3s;
+    }
+
+    .form-container input[type="text"]:focus,
+    .form-container input[type="number"]:focus,
+    .form-container input[type="email"]:focus,
+    .form-container select:focus,
+    .form-container textarea:focus {
+        border-color: #5d26c1; /* Highlight border on focus */
+        box-shadow: 0 0 0 3px rgba(93, 38, 193, 0.2);
+        outline: none;
+    }
+
+    /* Styling for form labels */
+    .form-container label {
+        display: block;
+        font-weight: 600;
+        margin-bottom: 8px;
+        color: #444;
+    }
+
+    /* Submit Button Style (using the primary dashboard action color) */
+    .form-container .btn-submit {
+        display: block;
+        width: 100%;
+        padding: 12px;
+        margin-top: 30px;
+        background: linear-gradient(135deg, #7c4dff, #5d26c1); /* Purple gradient */
+        color: white;
+        border: none;
+        border-radius: 10px;
+        font-size: 18px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background 0.3s, transform 0.2s, box-shadow 0.3s;
+        text-transform: uppercase;
+    }
+
+    .form-container .btn-submit:hover {
+        background: linear-gradient(135deg, #5d26c1, #4a1f9a);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 10px rgba(93, 38, 193, 0.4);
+    }
+
+    /* Optional: Basic style for message list (if not styled in base.html) */
+    .messages-list {
+        list-style: none;
+        padding: 0;
+        margin: 20px auto;
+        max-width: 600px;
+        text-align: center;
+    }
+    .messages-list li.success {
+        background-color: #d4edda;
+        color: #155724;
+        padding: 10px;
+        border-radius: 5px;
+        border: 1px solid #c3e6cb;
+        display: none; /* Hide standard list item, rely on JS alert */
+    }
+</style>
+
+<div class="form-container">
+    <h1> Add New Student</h1>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button class="btn-submit" type="submit">Save Student Details</button>
+    </form>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Find the list item that has the 'success' tag
+        const successMessageElement = document.querySelector('li.success');
+        
+        if (successMessageElement) {
+            // Extract the message text
+            const messageText = successMessageElement.textContent.trim();
+            
+            // Create a modal popup
+            const modal = document.createElement('div');
+            modal.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.6);
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                z-index: 1000;
+            `;
+            
+            const modalContent = document.createElement('div');
+            modalContent.style.cssText = `
+                background: white;
+                padding: 40px;
+                border-radius: 20px;
+                box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+                max-width: 500px;
+                text-align: center;
+                animation: slideIn 0.3s ease-out;
+            `;
+            
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes slideIn {
+                    from {
+                        opacity: 0;
+                        transform: translateY(-30px);
+                    }
+                    to {
+                        opacity: 1;
+                        transform: translateY(0);
+                    }
+                }
+            `;
+            document.head.appendChild(style);
+            
+            const heading = document.createElement('h2');
+            heading.style.cssText = `
+                color: #4ac787;
+                font-size: 28px;
+                margin: 0 0 15px 0;
+            `;
+            heading.textContent = '✅ Student Added Successfully!';
+            
+            const message = document.createElement('p');
+            message.style.cssText = `
+                color: #555;
+                font-size: 16px;
+                margin: 15px 0;
+                line-height: 1.6;
+            `;
+            message.textContent = messageText;
+            
+            const closeBtn = document.createElement('button');
+            closeBtn.style.cssText = `
+                margin-top: 25px;
+                padding: 12px 30px;
+                background: #5d26c1;
+                color: white;
+                border: none;
+                border-radius: 10px;
+                font-size: 16px;
+                font-weight: 600;
+                cursor: pointer;
+                transition: all 0.3s;
+            `;
+            closeBtn.textContent = '👁️ View Student Details';
+            closeBtn.onmouseover = function() {
+                this.style.background = '#4a1f9a';
+                this.style.transform = 'translateY(-2px)';
+                this.style.boxShadow = '0 4px 10px rgba(93, 38, 193, 0.4)';
+            };
+            closeBtn.onmouseout = function() {
+                this.style.background = '#5d26c1';
+                this.style.transform = 'translateY(0)';
+                this.style.boxShadow = 'none';
+            };
+            closeBtn.onclick = function() {
+                // Redirect will happen automatically since the form redirects to student_details
+                window.location.reload();
+            };
+            
+            modalContent.appendChild(heading);
+            modalContent.appendChild(message);
+            modalContent.appendChild(closeBtn);
+            modal.appendChild(modalContent);
+            document.body.appendChild(modal);
+            
+            // Optionally, remove the message element after displaying it
+            successMessageElement.remove();
+        }
+    });
+</script>
+
+{% endblock %}

@@ -1,0 +1,23 @@
+{% extends "students/base.html" %}
+{% block title %}Students{% endblock %}
+
+{% block content %}
+<h2 class="page-title">Students List</h2>
+
+<table class="student-table">
+    <tr>
+        <th>Name</th>
+        <th>Age</th>
+        <th>Course</th>
+    </tr>
+
+    {% for s in students %}
+    <tr>
+        <td>{{ s.name }}</td>
+        <td>{{ s.age }}</td>
+        <td>{{ s.course }}</td>
+    </tr>
+    {% endfor %}
+</table>
+
+{% endblock %}

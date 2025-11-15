@@ -1,0 +1,209 @@
+{% extends 'students/base.html' %}
+{% block title %}Mark Attendance{% endblock %}
+
+{% block content %}
+
+<style>
+    .form-container {
+        max-width: 600px;
+        margin: 50px auto;
+        padding: 40px;
+        background: white;
+        border-radius: 20px;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .form-container h2 {
+        color: #5d26c1;
+        text-align: center;
+        margin-bottom: 30px;
+        font-size: 28px;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        color: #333;
+        font-weight: 600;
+        font-size: 14px;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+        width: 100%;
+        padding: 12px;
+        border: 2px solid #e0e0e0;
+        border-radius: 10px;
+        font-size: 14px;
+        font-family: "Poppins", sans-serif;
+        box-sizing: border-box;
+        transition: 0.3s;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+        outline: none;
+        border-color: #5d26c1;
+        box-shadow: 0 0 8px rgba(93, 38, 193, 0.2);
+    }
+
+    .checkbox-group {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 15px;
+        background: #f9f7ff;
+        border-radius: 10px;
+        border: 2px solid #e0e0e0;
+    }
+
+    .checkbox-group input[type="checkbox"] {
+        width: 20px;
+        height: 20px;
+        cursor: pointer;
+    }
+
+    .checkbox-group label {
+        margin: 0;
+        cursor: pointer;
+        font-weight: 600;
+        color: #333;
+    }
+
+    .form-buttons {
+        display: flex;
+        gap: 15px;
+        margin-top: 30px;
+    }
+
+    .btn-submit {
+        flex: 1;
+        padding: 14px;
+        background: linear-gradient(135deg, #5d26c1, #a17fe0);
+        color: white;
+        border: none;
+        border-radius: 10px;
+        font-weight: 600;
+        cursor: pointer;
+        font-size: 16px;
+        transition: 0.3s;
+    }
+
+    .btn-submit:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(93, 38, 193, 0.3);
+    }
+
+    .btn-cancel {
+        flex: 1;
+        padding: 14px;
+        background: #888;
+        color: white;
+        border: none;
+        border-radius: 10px;
+        font-weight: 600;
+        cursor: pointer;
+        font-size: 16px;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: 0.3s;
+    }
+
+    .btn-cancel:hover {
+        background: #666;
+        transform: translateY(-2px);
+    }
+
+    .error-message {
+        color: #ff5c8a;
+        font-size: 13px;
+        margin-top: 5px;
+    }
+
+    .error-list {
+        background: #fff5f5;
+        border-left: 4px solid #ff5c8a;
+        padding: 15px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+    }
+
+    .error-list ul {
+        margin: 0;
+        padding-left: 20px;
+    }
+
+    .error-list li {
+        color: #ff5c8a;
+        font-size: 14px;
+        margin-bottom: 5px;
+    }
+</style>
+
+<div class="form-container">
+    <h2>📋 Mark Attendance</h2>
+
+    {% if form.non_field_errors %}
+        <div class="error-list">
+            <ul>
+                {% for error in form.non_field_errors %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+
+    <form method="post">
+        {% csrf_token %}
+
+        <div class="form-group">
+            <label for="id_student">Select Student *</label>
+            {{ form.student }}
+            {% if form.student.errors %}
+                <div class="error-message">{{ form.student.errors.0 }}</div>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            <label for="id_date">Date *</label>
+            {{ form.date }}
+            {% if form.date.errors %}
+                <div class="error-message">{{ form.date.errors.0 }}</div>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            <label for="id_subject">Subject *</label>
+            {{ form.subject }}
+            {% if form.subject.errors %}
+                <div class="error-message">{{ form.subject.errors.0 }}</div>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            <label>Status *</label>
+            <div class="checkbox-group">
+                {{ form.is_present }}
+                <label for="id_is_present">Present</label>
+            </div>
+            {% if form.is_present.errors %}
+                <div class="error-message">{{ form.is_present.errors.0 }}</div>
+            {% endif %}
+        </div>
+
+        <div class="form-buttons">
+            <button type="submit" class="btn-submit">✅ Mark Attendance</button>
+            <a href="{% url 'student_list' %}" class="btn-cancel">❌ Cancel</a>
+        </div>
+    </form>
+</div>
+
+{% endblock %}

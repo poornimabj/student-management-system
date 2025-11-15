@@ -1,0 +1,252 @@
+{% extends 'students/base.html' %}
+{% block title %}Add Grade{% endblock %}
+
+{% block content %}
+
+<style>
+    .form-container {
+        max-width: 600px;
+        margin: 50px auto;
+        padding: 40px;
+        background: white;
+        border-radius: 20px;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .form-container h2 {
+        color: #5d26c1;
+        text-align: center;
+        margin-bottom: 30px;
+        font-size: 28px;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        color: #333;
+        font-weight: 600;
+        font-size: 14px;
+    }
+
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+        width: 100%;
+        padding: 12px;
+        border: 2px solid #e0e0e0;
+        border-radius: 10px;
+        font-size: 14px;
+        font-family: "Poppins", sans-serif;
+        box-sizing: border-box;
+        transition: 0.3s;
+    }
+
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+        outline: none;
+        border-color: #5d26c1;
+        box-shadow: 0 0 8px rgba(93, 38, 193, 0.2);
+    }
+
+    .form-group textarea {
+        resize: vertical;
+        min-height: 100px;
+    }
+
+    .form-buttons {
+        display: flex;
+        gap: 15px;
+        margin-top: 30px;
+    }
+
+    .btn-submit {
+        flex: 1;
+        padding: 14px;
+        background: linear-gradient(135deg, #5d26c1, #a17fe0);
+        color: white;
+        border: none;
+        border-radius: 10px;
+        font-weight: 600;
+        cursor: pointer;
+        font-size: 16px;
+        transition: 0.3s;
+    }
+
+    .btn-submit:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(93, 38, 193, 0.3);
+    }
+
+    .btn-cancel {
+        flex: 1;
+        padding: 14px;
+        background: #888;
+        color: white;
+        border: none;
+        border-radius: 10px;
+        font-weight: 600;
+        cursor: pointer;
+        font-size: 16px;
+        text-decoration: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: 0.3s;
+    }
+
+    .btn-cancel:hover {
+        background: #666;
+        transform: translateY(-2px);
+    }
+
+    .error-message {
+        color: #ff5c8a;
+        font-size: 13px;
+        margin-top: 5px;
+    }
+
+    .success-modal {
+        display: none;
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        background: white;
+        padding: 30px;
+        border-radius: 15px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        z-index: 1000;
+        text-align: center;
+        animation: slideIn 0.3s ease-out;
+    }
+
+    @keyframes slideIn {
+        from {
+            transform: translate(-50%, -60%);
+            opacity: 0;
+        }
+        to {
+            transform: translate(-50%, -50%);
+            opacity: 1;
+        }
+    }
+
+    .success-modal h3 {
+        color: #4ac787;
+        margin-bottom: 10px;
+        font-size: 22px;
+    }
+
+    .success-modal p {
+        color: #666;
+        margin-bottom: 20px;
+    }
+
+    .success-modal button {
+        padding: 10px 20px;
+        background: #4ac787;
+        color: white;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: 600;
+    }
+
+    .success-modal button:hover {
+        background: #39a36f;
+    }
+
+    .error-list {
+        background: #fff5f5;
+        border-left: 4px solid #ff5c8a;
+        padding: 15px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+    }
+
+    .error-list ul {
+        margin: 0;
+        padding-left: 20px;
+    }
+
+    .error-list li {
+        color: #ff5c8a;
+        font-size: 14px;
+        margin-bottom: 5px;
+    }
+</style>
+
+<div class="form-container">
+    <h2>📚 Add Student Grade</h2>
+
+    {% if form.non_field_errors %}
+        <div class="error-list">
+            <ul>
+                {% for error in form.non_field_errors %}
+                    <li>{{ error }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    {% endif %}
+
+    <form method="post">
+        {% csrf_token %}
+
+        <div class="form-group">
+            <label for="id_student">Select Student *</label>
+            {{ form.student }}
+            {% if form.student.errors %}
+                <div class="error-message">{{ form.student.errors.0 }}</div>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            <label for="id_subject">Subject *</label>
+            {{ form.subject }}
+            {% if form.subject.errors %}
+                <div class="error-message">{{ form.subject.errors.0 }}</div>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            <label for="id_marks">Marks (out of 100) *</label>
+            {{ form.marks }}
+            {% if form.marks.errors %}
+                <div class="error-message">{{ form.marks.errors.0 }}</div>
+            {% endif %}
+        </div>
+
+        <div class="form-group">
+            <label for="id_grade">Grade (A/B/C/D/F) *</label>
+            {{ form.grade }}
+            {% if form.grade.errors %}
+                <div class="error-message">{{ form.grade.errors.0 }}</div>
+            {% endif %}
+        </div>
+
+        <div class="form-buttons">
+            <button type="submit" class="btn-submit">✅ Save Grade</button>
+            <a href="{% url 'student_list' %}" class="btn-cancel">❌ Cancel</a>
+        </div>
+    </form>
+</div>
+
+<div class="success-modal" id="successModal">
+    <h3>✅ Grade Added Successfully!</h3>
+    <p>The student's grade has been recorded.</p>
+    <button onclick="location.href='{% url 'student_list' %}'">Go to Students</button>
+</div>
+
+<script>
+    // Show success modal if messages exist
+    {% if messages %}
+        document.getElementById('successModal').style.display = 'block';
+    {% endif %}
+</script>
+
+{% endblock %}

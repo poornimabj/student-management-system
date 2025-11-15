@@ -1,0 +1,202 @@
+{% extends 'students/base.html' %}
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+
+<style>
+    body {
+        font-family: "Poppins", sans-serif;
+        background: #f2f2f7;
+        margin: 0;
+        padding: 0;
+    }
+
+    .header {
+        background: linear-gradient(135deg, #5d26c1, #a17fe0);
+        padding: 18px 25px;
+        color: white;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+
+    .header h2 {
+        margin: 0;
+    }
+
+    /* Header Button Group */
+    .header-actions {
+        display: flex;
+        gap: 15px;
+        align-items: center;
+    }
+
+    .header-actions .btn {
+        background: #4ac787;
+        padding: 8px 16px;
+        border-radius: 10px;
+        text-decoration: none;
+        color: white;
+        font-weight: 600;
+        transition: 0.3s;
+    }
+    
+    .header-actions .btn:hover {
+        background: #39a36f;
+    }
+
+    .header-actions .logout-btn {
+        background: #ff5c8a;
+        padding: 8px 16px;
+        border-radius: 10px;
+        text-decoration: none;
+        color: white;
+        font-weight: 600;
+        transition: 0.3s;
+    }
+
+    .header-actions .logout-btn:hover {
+        background: #d44d72;
+    }
+
+    /* Sidebar */
+    .sidebar {
+        width: 230px;
+        height: 100vh;
+        background: white;
+        position: fixed;
+        top: 70px;
+        left: 0;
+        box-shadow: 2px 0 10px rgba(0,0,0,0.1);
+        padding-top: 20px;
+    }
+
+    .sidebar a {
+        display: block;
+        padding: 12px 20px;
+        color: #444;
+        font-weight: 500;
+        text-decoration: none;
+        border-left: 4px solid transparent;
+        transition: 0.3s;
+    }
+
+    .sidebar a:hover {
+        background: #e9e2ff;
+        border-left: 4px solid #7c4dff;
+    }
+
+    /* Main Area */
+    .main-content {
+        margin-left: 240px;
+        padding: 30px;
+    }
+
+    .grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 25px;
+    }
+
+    /* Dashboard Cards */
+    .card {
+        padding: 25px;
+        background: white;
+        border-radius: 20px;
+        box-shadow: 0 5px 18px rgba(0,0,0,0.1);
+        text-align: center;
+        transition: 0.3s;
+    }
+
+    .card:hover {
+        transform: translateY(-5px);
+    }
+
+    .card h3 {
+        margin: 0;
+        font-size: 20px;
+        color: #555;
+    }
+
+    .card p {
+        margin-top: 8px;
+        font-size: 15px;
+        color: #888;
+    }
+
+    .card .count {
+        font-size: 35px;
+        font-weight: bold;
+        color: #5d26c1;
+        margin-top: 12px;
+    }
+</style>
+
+<!-- Header -->
+<div class="header">
+    <h2>Student Management Dashboard</h2>
+
+    <div class="header-actions">
+        <a class="btn" href="{% url 'add_student' %}">Add Student</a>
+        <a class="btn" href="{% url 'add_teacher' %}">Add Teacher</a>
+        <a class="logout-btn" href="{% url 'logout' %}">Logout</a>
+    </div>
+</div>
+
+<!-- Sidebar -->
+<div class="sidebar">
+    <a href="{% url 'dashboard' %}">Dashboard</a>
+    <a href="{% url 'student_list' %}">Students</a>
+    <a href="{% url 'teacher_list' %}">Teachers</a>
+    <a href="{% url 'attendance_report' %}">Attendance</a>
+    <a href="{% url 'mark_attendance' %}">Mark Attendance</a>
+    <a href="{% url 'grade_list' %}">Marks / Results</a>
+    <a href="{% url 'settings_page' %}">Settings</a>
+</div>
+
+<!-- Main Content -->
+<div class="main-content">
+    <h2>Welcome, {{ user.username }} 👋</h2>
+
+    <div class="grid">
+        <div class="card">
+            <h3>Total Students</h3>
+            <div class="count">120</div>
+            <p>Registered in system</p>
+        </div>
+
+        
+        <div class="card">
+            <h3>Teachers</h3>
+            <div class="count">18</div>
+            <p>Active teaching staff</p>
+        </div>
+
+        <div class="card">
+            <h3>Attendance Today</h3>
+            <div class="count">82%</div>
+            <p>Overall present</p>
+        </div>
+
+        <div class="card">
+            <h3>Exams Scheduled</h3>
+            <div class="count">4</div>
+            <p>Upcoming tests</p>
+        </div>
+
+        <div class="card">
+            <h3>Pending Fees</h3>
+            <div class="count">₹ 36K</div>
+            <p>Due from students</p>
+        </div>
+
+        <div class="card">
+            <h3>New Registrations</h3>
+            <div class="count">9</div>
+            <p>This month</p>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

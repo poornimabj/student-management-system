@@ -1,0 +1,200 @@
+{% extends 'students/base.html' %}
+{% block title %}Settings{% endblock %}
+
+{% block content %}
+
+<style>
+    /* Main Settings Container */
+    .settings-container {
+        max-width: 700px;
+        margin: 40px auto;
+        padding: 45px;
+        background: white;
+        border-radius: 20px;
+        box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Page Title */
+    .settings-container h1 {
+        text-align: center;
+        color: #5d26c1;
+        font-weight: 700;
+        margin: 0 0 40px 0;
+        font-size: 32px;
+        border-bottom: 3px solid #e9e2ff;
+        padding-bottom: 15px;
+    }
+
+    /* Settings Section */
+    .settings-section {
+        margin-bottom: 30px;
+    }
+
+    .settings-section h3 {
+        color: #5d26c1;
+        font-size: 18px;
+        font-weight: 600;
+        margin: 25px 0 20px 0;
+        padding-bottom: 10px;
+        border-bottom: 2px solid #f0f0f0;
+    }
+
+    /* Detail Item (Key-Value Pairs) */
+    .detail-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 16px 0;
+        border-bottom: 1px solid #f0f0f0;
+        transition: background-color 0.2s;
+    }
+
+    .detail-item:hover {
+        background-color: #f9f7ff;
+        padding: 16px 10px;
+        border-radius: 8px;
+    }
+
+    .detail-item:last-child {
+        border-bottom: none;
+    }
+
+    /* Label Text */
+    .detail-label {
+        font-weight: 600;
+        color: #555;
+        font-size: 15px;
+        min-width: 150px;
+    }
+
+    /* Value Text */
+    .detail-value {
+        color: #5d26c1;
+        font-weight: 500;
+        font-size: 15px;
+        text-align: right;
+        flex: 1;
+    }
+
+    /* Edit Button */
+    .edit-btn {
+        display: inline-block;
+        text-align: center;
+        margin-top: 30px;
+        width: 100%;
+        background: #4ac787;
+        padding: 12px 20px;
+        border-radius: 10px;
+        text-decoration: none;
+        color: white;
+        font-weight: 600;
+        font-size: 16px;
+        transition: all 0.3s ease;
+        border: none;
+        cursor: pointer;
+        margin-bottom: 12px;
+    }
+
+    .edit-btn:hover {
+        background: #39a36f;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(58, 163, 111, 0.3);
+    }
+
+    /* Logout Button */
+    .logout-btn {
+        display: inline-block;
+        text-align: center;
+        width: 100%;
+        background: #ff5c8a;
+        padding: 12px 20px;
+        border-radius: 10px;
+        text-decoration: none;
+        color: white;
+        font-weight: 600;
+        font-size: 16px;
+        transition: all 0.3s ease;
+        border: none;
+        cursor: pointer;
+    }
+
+    .logout-btn:hover {
+        background: #d44d72;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(212, 77, 114, 0.3);
+    }
+
+    /* Responsive Design */
+    @media (max-width: 600px) {
+        .settings-container {
+            margin: 20px;
+            padding: 30px 20px;
+        }
+
+        .detail-item {
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 8px;
+        }
+
+        .detail-value {
+            text-align: left;
+        }
+    }
+</style>
+
+<div class="settings-container">
+    <h1>⚙️ Account Settings</h1>
+
+    <!-- Profile Information Section -->
+    <div class="settings-section">
+        <h3>👤 Profile Information</h3>
+        
+        <div class="detail-item">
+            <span class="detail-label">Username</span>
+            <span class="detail-value">{{ user.username }}</span>
+        </div>
+
+        {% if user.first_name or user.last_name %}
+        <div class="detail-item">
+            <span class="detail-label">Full Name</span>
+            <span class="detail-value">{{ user.first_name }} {{ user.last_name|default:"N/A" }}</span>
+        </div>
+        {% endif %}
+
+        {% if user.email %}
+        <div class="detail-item">
+            <span class="detail-label">Email Address</span>
+            <span class="detail-value">{{ user.email }}</span>
+        </div>
+        {% endif %}
+    </div>
+
+    <!-- Account Activity Section -->
+    <div class="settings-section">
+        <h3>📊 Account Activity</h3>
+
+        <div class="detail-item">
+            <span class="detail-label">Account Created</span>
+            <span class="detail-value">{{ user.date_joined|date:"M d, Y" }}</span>
+        </div>
+
+        <div class="detail-item">
+            <span class="detail-label">Last Login</span>
+            <span class="detail-value">
+                {% if user.last_login %}
+                    {{ user.last_login|date:"M d, Y \a\t h:i A" }}
+                {% else %}
+                    Never
+                {% endif %}
+            </span>
+        </div>
+    </div>
+
+    <!-- Action Buttons -->
+    <a href="#" class="edit-btn">✏️ Edit Profile Information</a>
+    <a href="{% url 'change_password' %}" class="edit-btn" style="background: #ff9800; margin-bottom: 12px;">🔐 Change Password</a>
+    <a href="{% url 'logout' %}" class="logout-btn">🚪 Logout</a>
+</div>
+
+{% endblock %}

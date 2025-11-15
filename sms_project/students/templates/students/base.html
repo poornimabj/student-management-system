@@ -1,0 +1,33 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>{% block title %}SMS{% endblock %}</title>
+  <link rel="stylesheet" href="{% static 'students/css/style.css' %}">
+</head>
+<body>
+  <div class="topbar">
+    <div class="brand">Student Management</div>
+    <div class="nav">
+      {% if user.is_authenticated %}
+        <span class="user">Hi {{ user.username }}</span>
+        <a class="link" href="{% url 'dashboard' %}">Dashboard</a>
+        <a class="link" href="{% url 'student_list' %}">Students</a>
+        <a class="link" href="{% url 'add_student' %}">Add Student</a>
+        <a class="link" href="{% url 'logout' %}">Logout</a>
+      {% else %}
+        <a class="link" href="{% url 'login' %}">Login</a>
+      {% endif %}
+    </div>
+  </div>
+  <div class="container">
+    {% for message in messages %}
+      <div class="flash {{ message.tags }}">{{ message }}</div>
+    {% endfor %}
+    {% block content %}{% endblock %}
+  </div>
+  <footer class="footer">© {{ now.year }} Simple SMS</footer>
+</body>
+</html>
+

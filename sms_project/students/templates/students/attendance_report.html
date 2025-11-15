@@ -1,0 +1,46 @@
+{% extends 'students/base.html' %}
+{% block title %}Attendance Report{% endblock %}
+
+{% block content %}
+<style>
+    .report-container {
+        max-width: 900px;
+        margin: 30px auto;
+        padding: 30px;
+        background: white;
+        border-radius: 16px;
+        box-shadow: 0 5px 18px rgba(0,0,0,0.08);
+    }
+    .report-container h1 { color: #5d26c1; text-align: center; }
+    .subject-row { display:flex; align-items:center; justify-content:space-between; padding:12px 0; border-bottom:1px solid #f0f0f0 }
+    .subject-name { font-weight:600; color:#333 }
+    .progress { width:60%; height:14px; background:#f0f0f0; border-radius:8px; overflow:hidden; margin-left:20px }
+    .progress > i { display:block; height:100%; background:linear-gradient(90deg,#4ac787,#5d26c1); }
+    .percent { width:80px; text-align:right; color:#555 }
+</style>
+
+<div class="report-container">
+    <h1>📊 Attendance Report — Subject-wise</h1>
+
+    {% if report %}
+        {% for r in report %}
+            <div class="subject-row">
+                <div style="display:flex; align-items:center; gap:12px;">
+                    <div class="subject-name">{{ r.subject }}</div>
+                    <div style="color:#888; font-size:13px;">(Present: {{ r.present }} / Total: {{ r.total }})</div>
+                </div>
+                <div style="display:flex; align-items:center; gap:12px;">
+                    <div class="progress" aria-valuenow="{{ r.percentage }}">
+                        <i style="width: {{ r.percentage }}%;"></i>
+                    </div>
+                    <div class="percent">{{ r.percentage }}%</div>
+                </div>
+            </div>
+        {% endfor %}
+    {% else %}
+        <p>No attendance records yet.</p>
+    {% endif %}
+
+</div>
+
+{% endblock %}

@@ -1,0 +1,120 @@
+{% extends 'students/base.html' %}
+{% block title %}Edit Teacher{% endblock %}
+
+{% block content %}
+<style>
+    .form-container {
+        max-width: 600px;
+        margin: 30px auto;
+        padding: 30px;
+        background: white;
+        border-radius: 20px;
+        box-shadow: 0 5px 18px rgba(0, 0, 0, 0.1);
+    }
+
+    .form-container h1 {
+        text-align: center;
+        color: #5d26c1;
+        font-weight: 700;
+        margin-bottom: 30px;
+        font-size: 28px;
+    }
+
+    .form-container p {
+        margin-bottom: 20px;
+    }
+
+    .form-container input[type="text"],
+    .form-container input[type="number"],
+    .form-container input[type="email"],
+    .form-container select,
+    .form-container textarea {
+        width: 100%;
+        padding: 12px;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        box-sizing: border-box;
+        font-size: 16px;
+        transition: border-color 0.3s, box-shadow 0.3s;
+    }
+
+    .form-container input[type="text"]:focus,
+    .form-container input[type="number"]:focus,
+    .form-container input[type="email"]:focus,
+    .form-container select:focus,
+    .form-container textarea:focus {
+        border-color: #5d26c1;
+        box-shadow: 0 0 0 3px rgba(93, 38, 193, 0.2);
+        outline: none;
+    }
+
+    .form-container label {
+        display: block;
+        font-weight: 600;
+        margin-bottom: 8px;
+        color: #444;
+    }
+
+    .form-buttons {
+        display: flex;
+        gap: 15px;
+        margin-top: 30px;
+    }
+
+    .btn-submit {
+        flex: 1;
+        padding: 12px;
+        background: linear-gradient(135deg, #7c4dff, #5d26c1);
+        color: white;
+        border: none;
+        border-radius: 10px;
+        font-size: 18px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background 0.3s, transform 0.2s, box-shadow 0.3s;
+        text-transform: uppercase;
+    }
+
+    .btn-submit:hover {
+        background: linear-gradient(135deg, #5d26c1, #4a1f9a);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 10px rgba(93, 38, 193, 0.4);
+    }
+
+    .btn-cancel {
+        flex: 1;
+        padding: 12px;
+        background: #888;
+        color: white;
+        border: none;
+        border-radius: 10px;
+        font-size: 18px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background 0.3s, transform 0.2s;
+        text-decoration: none;
+        text-transform: uppercase;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .btn-cancel:hover {
+        background: #666;
+        transform: translateY(-2px);
+    }
+</style>
+
+<div class="form-container">
+    <h1>✏️ Edit Teacher</h1>
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <div class="form-buttons">
+            <button class="btn-submit" type="submit">💾 Update Teacher</button>
+            <a href="{% url 'teacher_details' teacher.pk %}" class="btn-cancel">❌ Cancel</a>
+        </div>
+    </form>
+</div>
+
+{% endblock %}

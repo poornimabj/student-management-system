@@ -1,0 +1,12 @@
+{% extends 'students/base.html' %}
+{% block title %}Edit Student{% endblock %}
+{% block content %}
+  <h1>Edit: {{ student.name }}</h1>
+  <div class="card">
+    <form method="post">
+      {% csrf_token %}
+      {{ form.as_p }}
+      <button class="btn" type="submit">Update</button>
+    </form>
+  </div>
+{% endblock %}

@@ -1,0 +1,283 @@
+{% extends 'students/base.html' %}
+{% block title %}Grades / Results{% endblock %}
+
+{% block content %}
+
+<style>
+    body {
+        font-family: "Poppins", sans-serif;
+        background: #f2f2f7;
+        margin: 0;
+        padding: 0;
+    }
+
+    .page-header {
+        background: linear-gradient(135deg, #5d26c1, #a17fe0);
+        padding: 20px 30px;
+        color: white;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+    }
+
+    .page-header h2 {
+        margin: 0;
+        font-size: 28px;
+    }
+
+    .page-header a {
+        background: #4ac787;
+        padding: 10px 20px;
+        border-radius: 10px;
+        text-decoration: none;
+        color: white;
+        font-weight: 600;
+        transition: 0.3s;
+    }
+
+    .page-header a:hover {
+        background: #39a36f;
+    }
+
+    .main-content {
+        padding: 30px;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+
+    .search-bar {
+        margin-bottom: 30px;
+        display: flex;
+        gap: 10px;
+    }
+
+    .search-bar input {
+        flex: 1;
+        padding: 12px 20px;
+        border: 2px solid #e0e0e0;
+        border-radius: 10px;
+        font-size: 14px;
+        transition: 0.3s;
+    }
+
+    .search-bar input:focus {
+        outline: none;
+        border-color: #5d26c1;
+        box-shadow: 0 0 8px rgba(93, 38, 193, 0.2);
+    }
+
+    .search-bar button {
+        padding: 12px 20px;
+        background: #5d26c1;
+        color: white;
+        border: none;
+        border-radius: 10px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: 0.3s;
+    }
+
+    .search-bar button:hover {
+        background: #4a1fa3;
+    }
+
+    .grades-table {
+        width: 100%;
+        border-collapse: collapse;
+        background: white;
+        border-radius: 15px;
+        overflow: hidden;
+        box-shadow: 0 5px 18px rgba(0,0,0,0.1);
+    }
+
+    .grades-table thead {
+        background: linear-gradient(135deg, #5d26c1, #a17fe0);
+        color: white;
+    }
+
+    .grades-table th {
+        padding: 15px;
+        text-align: left;
+        font-weight: 600;
+        font-size: 14px;
+    }
+
+    .grades-table td {
+        padding: 15px;
+        border-bottom: 1px solid #e0e0e0;
+        font-size: 14px;
+        color: #555;
+    }
+
+    .grades-table tbody tr:hover {
+        background: #f9f7ff;
+    }
+
+    .grades-table tbody tr:last-child td {
+        border-bottom: none;
+    }
+
+    .grade-badge {
+        display: inline-block;
+        padding: 5px 12px;
+        border-radius: 20px;
+        font-weight: 600;
+        font-size: 12px;
+        text-align: center;
+        min-width: 40px;
+    }
+
+    .grade-a {
+        background: #d4edda;
+        color: #155724;
+    }
+
+    .grade-b {
+        background: #cfe2ff;
+        color: #084298;
+    }
+
+    .grade-c {
+        background: #fff3cd;
+        color: #664d03;
+    }
+
+    .grade-d {
+        background: #f8d7da;
+        color: #842029;
+    }
+
+    .grade-f {
+        background: #f5c2c7;
+        color: #842029;
+    }
+
+    .marks-bar {
+        width: 100px;
+        height: 30px;
+        background: #e0e0e0;
+        border-radius: 8px;
+        overflow: hidden;
+        position: relative;
+    }
+
+    .marks-fill {
+        height: 100%;
+        background: linear-gradient(90deg, #4ac787, #3d8b6f);
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-size: 12px;
+        font-weight: 600;
+    }
+
+    .empty-state {
+        text-align: center;
+        padding: 60px 20px;
+        color: #888;
+    }
+
+    .empty-state h3 {
+        margin: 20px 0 10px 0;
+        color: #555;
+    }
+
+    .empty-state p {
+        margin: 0;
+    }
+
+    .empty-state a {
+        display: inline-block;
+        margin-top: 20px;
+        padding: 10px 20px;
+        background: #5d26c1;
+        color: white;
+        text-decoration: none;
+        border-radius: 8px;
+        font-weight: 600;
+        transition: 0.3s;
+    }
+
+    .empty-state a:hover {
+        background: #4a1fa3;
+    }
+
+    .success-message {
+        background: #d4edda;
+        color: #155724;
+        padding: 15px;
+        border-radius: 10px;
+        margin-bottom: 20px;
+        border-left: 4px solid #28a745;
+    }
+</style>
+
+{% if messages %}
+    {% for message in messages %}
+        <div class="success-message">{{ message }}</div>
+    {% endfor %}
+{% endif %}
+
+<div class="page-header">
+    <h2>📚 Grades / Results</h2>
+    <a href="{% url 'add_grade' %}">+ Add New Grade</a>
+</div>
+
+<div class="main-content">
+    <div class="search-bar">
+        <form method="get" style="display: flex; gap: 10px; width: 100%;">
+            <input type="text" name="q" placeholder="Search by student name or subject..." value="{{ request.GET.q }}">
+            <button type="submit">🔍 Search</button>
+        </form>
+    </div>
+
+    {% if grades %}
+        <table class="grades-table">
+            <thead>
+                <tr>
+                    <th>Student Name</th>
+                    <th>Subject</th>
+                    <th>Marks</th>
+                    <th>Grade</th>
+                    <th>Recorded On</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for grade in grades %}
+                    <tr>
+                        <td>
+                            <a href="{% url 'student_details' grade.student.pk %}" style="color: #5d26c1; text-decoration: none; font-weight: 600;">
+                                {{ grade.student.name }}
+                            </a>
+                        </td>
+                        <td>{{ grade.subject }}</td>
+                        <td>
+                            <div class="marks-bar">
+                                <div class="marks-fill" style="width: {{ grade.marks }}%;">
+                                    {{ grade.marks }}/100
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <span class="grade-badge grade-{{ grade.grade|lower }}">
+                                {{ grade.grade }}
+                            </span>
+                        </td>
+                        <td>{{ grade.date_recorded|date:"d M Y" }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% else %}
+        <div class="empty-state">
+            <h3>📭 No Grades Found</h3>
+            <p>{% if request.GET.q %}No results match your search.{% else %}Start by adding a grade for a student.{% endif %}</p>
+            <a href="{% url 'add_grade' %}">+ Add First Grade</a>
+        </div>
+    {% endif %}
+</div>
+
+{% endblock %}
